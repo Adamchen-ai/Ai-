@@ -1,14 +1,17 @@
-
 import { GoogleGenAI, Type, Chat } from "@google/genai";
 import { type UserProfile, type FitnessPlan, type ChatMessage } from '../types/index';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to get AI instance safely
+const getAI = () => {
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+};
 
 // Keep a reference to the active chat session
 let chatSession: Chat | null = null;
 
 export const generateFitnessPlan = async (profile: UserProfile): Promise<FitnessPlan> => {
   try {
+    const ai = getAI();
     const goalText = profile.goal === 'muscle_gain' ? '增肌 (Muscle Gain)' : '減脂 (Fat Loss)';
     
     const prompt = `
